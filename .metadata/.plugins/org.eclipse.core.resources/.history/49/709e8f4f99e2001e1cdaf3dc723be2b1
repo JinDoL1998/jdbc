@@ -1,0 +1,28 @@
+package days01;
+
+import java.sql.Connection;
+
+import oracle.jdbc.dcn.DatabaseChangeEvent;
+import oracle.jdbc.driver.OracleDriver;
+import oracle.jdbc.pool.OracleDataSource;
+
+/**
+ * @author jinseong
+ * @date 2024. 3. 15. 오후 3:44:41
+ * @subject	[내일 복습 문제]
+ * @content scott 접속 + dept 테이블 SELECT
+ */
+public class Ex03 {
+
+	public static void main(String[] args) {
+		
+		// 1. 오라클 드라이버
+		
+		// 2. connection 접속
+		// 3. 작업
+		// 4. connectino 접속 종료
+		Connection.close();
+		
+	}
+
+}

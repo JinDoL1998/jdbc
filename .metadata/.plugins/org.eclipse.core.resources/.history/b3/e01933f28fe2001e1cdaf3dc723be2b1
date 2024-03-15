@@ -1,0 +1,11 @@
+package days01;
+
+public class Ex02 {
+
+	public static void main(String[] args) {
+		
+		// Ex02.java <--> localhost oracle 서버에 연결
+		
+	}
+
+}

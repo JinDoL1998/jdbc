@@ -1,0 +1,28 @@
+package days01;
+
+/**
+ * @author jinseong
+ * @date 2024. 3. 15. 오후 5:04:44
+ * @subject
+ * @content
+ */
+public class Ex04 {
+
+	public static void main(String[] args) {
+		
+		// 문제
+		// 부서번호( deptno )를 입력받아서
+		// emp 테이블에서 SELECT 하는 코딩
+		// EmpVO
+		// dispEmp(ArrayList<EmpVO> list)
+		
+		String className = "oracle.jdbc.driver.OracleDriver";
+		String url = "jdbc:oracle:thin:@localhost:1521:xe";
+		String user = "scott";
+		String password = "tiger";
+		
+		
+		
+	}
+
+}

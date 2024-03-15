@@ -1,0 +1,50 @@
+package days01;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+import oracle.jdbc.driver.OracleDriver;
+import oracle.jdbc.pool.OracleDataSource;
+
+/**
+ * @author jinseong
+ * @date 2024. 3. 15. 오후 3:44:41
+ * @subject	[내일 복습 문제]
+ * @content scott 접속 + dept 테이블 SELECT
+ */
+public class Ex03 {
+
+	public static void main(String[] args) {
+		
+		String className = "oracle.jdbc.driver.OracleDriver";
+		String url = "jdbc:oracle:thin:@localhost:1521:xe";
+		String user = "scott";
+		String password = "tiger";
+		Connection conn = null;
+		
+		// 1. Class.forName() JDBC 드라이버 로딩
+		try {
+			Class.forName(className);
+			// 2. Connection 객체 생성 - DriverManager.getConnection(url, id, pass)
+			conn =  DriverManager.getConnection(url, user, password);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		// 3. 필요한 작업(CRUD)
+		// 4. Connection 닫기 (cloase)
+		
+		
+		System.out.println(" end ");
+		
+	}
+
+}

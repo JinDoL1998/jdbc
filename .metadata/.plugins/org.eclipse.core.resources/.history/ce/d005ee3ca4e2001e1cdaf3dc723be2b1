@@ -1,0 +1,62 @@
+package days01;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+
+import domain.EmpVO;
+
+/**
+ * @author jinseong
+ * @date 2024. 3. 15. 오후 5:04:44
+ * @subject
+ * @content
+ */
+public class Ex04 {
+
+	public static void main(String[] args) {
+		
+		// 문제
+		// 부서번호( deptno )를 입력받아서
+		// emp 테이블에서 SELECT 하는 코딩
+		// EmpVO
+		// dispEmp(ArrayList<EmpVO> list)
+		
+		String className = "oracle.jdbc.driver.OracleDriver";
+		String url = "jdbc:oracle:thin:@localhost:1521:xe";
+		String user = "scott";
+		String password = "tiger";
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		
+		int empno;
+		String ename;
+		String job;
+		int mgr;
+		String hiredate;
+		int sal;
+		int comm;
+		int deptno;
+		
+		ArrayList<EmpVO> list = new ArrayList<EmpVO>();
+		
+		try {
+			Class.forName(className);
+			conn = DriverManager.getConnection(url, user, password);
+			
+			String sql = "SELECT * FROM emp WHERE deptno = 30";
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+	}
+
+}

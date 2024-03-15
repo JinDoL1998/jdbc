@@ -1,0 +1,18 @@
+package domain;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+// [V]alue[O]bject
+
+@Getter
+@Setter
+@ToString
+public class DeptVO {
+
+	private int deptno;
+	private String dname;
+	private String loc;
+	
+}
