@@ -3,26 +3,21 @@ package domain;
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@Getter
-@Setter
-@ToString
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmpVO {
-
+@Builder
+public class EmpInfoVO {
 	
 	private int empno;
+	private String dname;
 	private String ename;
-	private String job;
-	private int mgr;
 	private Date hiredate;
-	private int sal;
-	private int comm;
-	private int deptno;
+	private double pay;
+	private int grade;
 	
 }

@@ -43,7 +43,7 @@ public class Ex04 {
 		String ename;
 		String job;
 		int mgr;
-		String hiredate;
+		Date hiredate;
 		int sal;
 		int comm;
 		int deptno;
@@ -63,7 +63,7 @@ public class Ex04 {
 				ename = rs.getString("ename");
 				job = rs.getString("job");
 				mgr = rs.getInt("mgr");
-				hiredate = rs.getString("hiredate");
+				hiredate = rs.getDate ("hiredate");
 				sal = rs.getInt("sal");
 				comm = rs.getInt("comm");
 				deptno = rs.getInt("deptno");
