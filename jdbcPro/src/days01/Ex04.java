@@ -44,8 +44,8 @@ public class Ex04 {
 		String job;
 		int mgr;
 		Date hiredate;
-		int sal;
-		int comm;
+		Double sal;
+		Double comm;
 		int deptno;
 		
 		ArrayList<EmpVO> list = new ArrayList<EmpVO>();
@@ -64,8 +64,8 @@ public class Ex04 {
 				job = rs.getString("job");
 				mgr = rs.getInt("mgr");
 				hiredate = rs.getDate ("hiredate");
-				sal = rs.getInt("sal");
-				comm = rs.getInt("comm");
+				sal = rs.getDouble("sal");
+				comm = rs.getDouble("comm");
 				deptno = rs.getInt("deptno");
 				
 				

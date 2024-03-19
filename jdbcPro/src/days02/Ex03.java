@@ -1,6 +1,7 @@
 package days02;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -42,11 +43,136 @@ public class Ex03 {
 		else if (selectNumber == 3) deleteEmp();
 		else if (selectNumber == 1) addEmp();
 		else if (selectNumber == 4) searchEmp();
-//		else if (selectNumber == 2) modifyEmp();
+		else if (selectNumber == 2) modifyEmp();
 
 
 
 	} // main
+
+
+	private static void modifyEmp() {
+
+		System.out.print("> 수정할 사원번호 입력하세요 ? ");
+		int empno = scanner.nextInt(); 
+		scanner.nextLine();  
+
+		System.out.print("> 수정할 사원명 입력하세요 ? ");
+		String ename = scanner.nextLine(); 
+
+		System.out.print("> 수정할 직업 입력하세요 ? ");
+		String job = scanner.nextLine();
+
+		System.out.print("> 수정할 사수번호 입력하세요 ? ");
+		String mgr = scanner.nextLine();
+
+		System.out.print("> 수정할 입사날짜 입력하세요 ? ");
+		String hiredate = scanner.nextLine();
+
+		System.out.print("> 수정할 임금 입력하세요 ? ");
+		String sal = scanner.nextLine();
+
+		System.out.print("> 수정할 커미션 입력하세요 ? ");
+		String comm = scanner.nextLine();
+
+		System.out.print("> 수정할 부서번호 입력하세요 ? ");
+		String deptno = scanner.nextLine();
+
+		String sql = null;
+
+		PreparedStatement pstmt = null;
+
+		if (!ename.equals("")) {
+			sql = String.format(
+					" UPDATE emp "
+							+ " SET ename = ? "
+							+ " WHERE empno = %d ", empno);
+		}
+
+		if ( !job.equals("")) {
+			sql = String.format(
+					" UPDATE emp "
+							+ " SET ename = ? "
+							+ " WHERE empno = %d ", empno);
+		}
+
+		if ( !mgr.equals("") ) {
+			sql = String.format(
+					" UPDATE emp "
+							+ " SET ename = ? "
+							+ " WHERE empno = %d ", empno);
+		}
+
+		if ( !hiredate.equals("") ) {
+			sql = String.format(
+					" UPDATE emp "
+							+ " SET ename = ? "
+							+ " WHERE empno = %d ", empno);
+		}
+
+		if ( !sal.equals("") ) {
+			sql = String.format(
+					" UPDATE emp "
+							+ " SET ename = ? "
+							+ " WHERE empno = %d ", empno);
+		}
+
+		if ( !comm.equals("") ) {
+			sql = String.format(
+					" UPDATE emp "
+							+ " SET ename = ? "
+							+ " WHERE empno = %d ", empno);
+		}
+
+		if ( !deptno.equals("") ) {
+			sql = String.format(
+					" UPDATE emp "
+							+ " SET ename = ? "
+							+ " WHERE empno = %d ", empno);
+		}
+		try { 
+			pstmt = conn.prepareStatement(sql); 
+
+			if(!ename.equals("")) {
+				pstmt.setString(1, ename);
+			}
+			if(!job.equals("")) {
+				pstmt.setString(1, job);
+			}
+			if(!mgr.equals("")) {
+				pstmt.setString(1, mgr);
+			}
+			if(!hiredate.equals("")) {
+				pstmt.setString(1, hiredate);
+			}
+			if(!sal.equals("")) {
+				pstmt.setString(1, sal);
+			}
+			if(!comm.equals("")) {
+				pstmt.setString(1, comm);
+			}
+			if(!deptno.equals("")) {
+				pstmt.setString(1, deptno);
+			}
+
+
+			int rowCount = pstmt.executeUpdate();
+
+			if( rowCount == 1 ) {
+				System.out.println(" 부서 수정 성공!!!");
+			}
+
+			// COMMIT or ROLLBACK 
+		} catch (SQLException e) { 
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+			} catch (SQLException e) { 
+				e.printStackTrace();
+			}
+		}
+
+	}
 
 
 	// 검색
@@ -55,42 +181,53 @@ public class Ex03 {
 		int searchCategory = scanner.nextInt();
 
 		System.out.println("검색어 입력 : ");
-		String searchKeyword = scanner.next();
-		
-		String sql = null;
+		String searchKeyword = scanner.next().trim();
+
+		String sql = "SELECT * "
+				+ "FROM emp ";
 		ArrayList<EmpVO> list = null;
+		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		Statement stmt = null;
+
+
+
 		if ( searchCategory == 1) {
 
-			sql = String.format("SELECT * "
-								+ "FROM emp "
-								+ "WHERE empno IN ( '%s' ) ", searchKeyword);
+			sql += "WHERE empno = ? ";
 		}
 
 		if ( searchCategory == 2) {
 
-			sql = String.format("SELECT * "
-								+ "FROM emp "
-								+ "WHERE REGEXP_LIKE(ename, '%s', 'i') ", searchKeyword);
+			sql += "WHERE REGEXP_LIKE(ename, ?, 'i') ";
 		}
 
 		if ( searchCategory == 3) {
 
-			sql = String.format("SELECT * "
-								+ "FROM emp "
-								+ "WHERE REGEXP_LIKE(deptno, '%s', 'i') ", searchKeyword);
+			sql += "WHERE deptno = ? ";
 		}
-		
-		int empno, mgr, sal, comm, deptno;
+
+		int empno, mgr, deptno;
 		String ename, job;
+		Double sal, comm;
 		Date hireDate;
 
 		EmpVO vo = null;
 
 		try {
-			stmt = conn.createStatement();
-			rs = stmt.executeQuery(sql);
+			pstmt = conn.prepareStatement(sql);
+
+			if (searchCategory == 1) {
+				pstmt.setString(1, searchKeyword);
+			}
+			else if (searchCategory == 2) {
+				pstmt.setString(1, searchKeyword);
+			}
+			else if (searchCategory == 3) {
+				pstmt.setString(1, searchKeyword);
+			}
+
+
+			rs = pstmt.executeQuery();
 			if (rs.next()) {
 				list = new ArrayList<EmpVO>();
 				do {
@@ -99,19 +236,21 @@ public class Ex03 {
 					job = rs.getString("job");
 					mgr = rs.getInt("mgr");
 					hireDate = rs.getDate("hiredate");
-					sal = rs.getInt("sal");
-					comm = rs.getInt("comm");
+					sal = rs.getDouble("sal");
+					comm = rs.getDouble("comm");
 					deptno = rs.getInt("deptno");
-					vo = new EmpVO(empno, ename, job, mgr, hireDate, sal, comm, deptno);
+					vo = new EmpVO(empno, ename, job, mgr, hireDate, empno, mgr, deptno);
 					list.add(vo);
 				} while (rs.next());
 				dispEmp(list);
 			} 
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
 			try {
-				stmt.close();
+				pstmt.close();
 				rs.close();
 			} catch (SQLException e) { 
 				e.printStackTrace();
@@ -167,9 +306,10 @@ public class Ex03 {
 		String sql = "SELECT * "
 				+ "FROM emp";
 
-		int empno, mgr, sal, comm, deptno;
+		int empno, mgr,  deptno;
 		String ename, job;
 		Date hireDate;
+		double sal, comm;
 
 		EmpVO vo = null;
 
@@ -184,8 +324,8 @@ public class Ex03 {
 					job = rs.getString("job");
 					mgr = rs.getInt("mgr");
 					hireDate = rs.getDate("hiredate");
-					sal = rs.getInt("sal");
-					comm = rs.getInt("comm");
+					sal = rs.getDouble("sal");
+					comm = rs.getDouble("comm");
 					deptno = rs.getInt("deptno");
 					vo = new EmpVO(empno, ename, job, mgr, hireDate, sal, comm, deptno);
 					list.add(vo);
