@@ -19,37 +19,37 @@ import persistence.EmpDAOImpl;
 
 class EmpDAOImplTest {
 
-//	@Test
-//	void testAddEmp() {
-//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//		Date hiredate = null;
-//		try {
-//			hiredate = sdf.parse("2017-01-01");
-//		} catch (ParseException e) { 
-//			e.printStackTrace();
-//		}
-//
-//		Connection conn = DBConn.getConnection();
-//		EmpDAO dao = new EmpDAOImpl(conn);
-//		EmpVO evo = new EmpVO(7777, "jinseong", "student", 7369, hiredate, 1000, 500, 20);
-//		int rowCount = dao.addEmp(evo);
-//		// 출력확인
-//		if (rowCount == 1) {
-//			System.out.println("사원 추가 성공!!!");
-//			DBConn.close();
-//		}
-//
-//	}
+	@Test
+	void testAddEmp() {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date hiredate = null;
+		try {
+			hiredate = sdf.parse("2017-01-01");
+		} catch (ParseException e) { 
+			e.printStackTrace();
+		}
 
-		@Test
-		void test() {
-			Connection conn = DBConn.getConnection();
-			EmpDAO dao = new EmpDAOImpl(conn);
-			
-			ArrayList<EmpVO> list = dao.getEmpSelect();
-			
-			System.out.println("사원수 : " + list.size() + "명");
+		Connection conn = DBConn.getConnection();
+		EmpDAO dao = new EmpDAOImpl(conn);
+		EmpVO evo = new EmpVO(7777, "jinseong", "student", 7369, hiredate, 1000, 500, 40);
+		int rowCount = dao.addEmp(evo);
+		// 출력확인
+		if (rowCount == 1) {
+			System.out.println("사원 추가 성공!!!");
 			DBConn.close();
 		}
+
+	}
+
+//		@Test
+//		void test() {
+//			Connection conn = DBConn.getConnection();
+//			EmpDAO dao = new EmpDAOImpl(conn);
+//			
+//			ArrayList<EmpVO> list = dao.getEmpSelect();
+//			
+//			System.out.println("사원수 : " + list.size() + "명");
+//			DBConn.close();
+//		}
 
 }

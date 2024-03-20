@@ -1,6 +1,7 @@
 package domain;
 
 import java.util.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,18 +11,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EmpVO {
-
+public class DeptEmpVO {
 	
+	private int deptno;
+	private String dname;
 	private int empno;
 	private String ename;
-	private String job;
-	private int mgr;
 	private Date hiredate;
-//	private LocalDateTime hiredate;
-	private double sal;
-	private double comm;
-	private int deptno;
-
+	private double pay;
 	
 }
