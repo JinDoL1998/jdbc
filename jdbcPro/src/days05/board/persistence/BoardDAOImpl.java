@@ -256,7 +256,7 @@ public class BoardDAOImpl implements BoardDAO {
 			sql += " WHERE REGEXP_LIKE( title, ?, 'i') OR  REGEXP_LIKE( content, ?, 'i') ";
 			break;
 		} // switch
-		
+
 		sql += "ORDER BY seq ASC ";
 		try {
 
@@ -265,7 +265,7 @@ public class BoardDAOImpl implements BoardDAO {
 			if (searchCondition == 4) {
 				this.pstmt.setString(2, searchWord);
 			}
-			
+
 			rs = pstmt.executeQuery();
 
 			if(rs.next()) {
@@ -309,7 +309,7 @@ public class BoardDAOImpl implements BoardDAO {
 
 	@Override
 	public ArrayList<BoardDTO> popular() throws SQLException {
-		
+
 		ArrayList<BoardDTO> list = null;
 		long seq;
 		String title;
@@ -317,7 +317,7 @@ public class BoardDAOImpl implements BoardDAO {
 		String email;
 		Date writeDate;
 		int readed;
-		
+
 		String sql = "SELECT seq, title, writer, email, writeDate, readed "
 				+ "FROM tbl_cstvsboard "
 				+ "WHERE readed >= 1 "
@@ -365,6 +365,297 @@ public class BoardDAOImpl implements BoardDAO {
 
 
 		return list;
+	}
+
+	@Override
+	public ArrayList<BoardDTO> select(int currentPage, int numberPerPage) throws SQLException {
+
+		ArrayList<BoardDTO> list = null;
+
+		long seq;
+		String title;
+		String writer;
+		String email;
+		Date writeDate;
+		int readed;
+
+		String sql = "SELECT * "
+				+ "FROM( "
+				+ "    SELECT ROWNUM no,t.* "
+				+ "    FROM ( "
+				+ "        SELECT seq, title, writer, email, writeDate, readed "
+				+ "        FROM tbl_cstvsboard "
+				+ "        ORDER BY seq DESC "
+				+ "        ) t "
+				+ "    ) b "
+				+ "WHERE no BETWEEN ? AND ?";
+		try {
+
+			int end = currentPage * numberPerPage;
+			int start = end - (numberPerPage-1);
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, start);
+			pstmt.setInt(2, end);
+			rs = pstmt.executeQuery();
+
+			if(rs.next()) {
+				list = new ArrayList<BoardDTO>();
+				do {
+					seq = rs.getLong("seq");
+					title = rs.getString("title");
+					writer = rs.getString("writer");
+					email = rs.getString("email");
+					writeDate = rs.getDate("writeDate");
+					readed = rs.getInt("readed");
+
+					BoardDTO dto = BoardDTO.builder()
+							.seq(seq)
+							.title(title)
+							.writer(writer)
+							.writeDate(writeDate)
+							.readed(readed)
+							.build();
+					list.add(dto);
+
+				} while (rs.next());
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				rs.close();
+				pstmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+
+		return list;
+	}
+	
+	@Override
+	public ArrayList<BoardDTO> search(
+	           int searchCondition, String searchWord
+	         , int currentPage, int numberPerPage)
+	         throws SQLException {
+	      
+	      ArrayList<BoardDTO> list = null;
+
+	      long    seq;
+	      String    title;
+	      String    writer;
+	      String    email;
+	      Date    writedate;
+	      int    readed;
+
+	      String sql = "SELECT * "
+	            + "FROM ( "
+	            + "        SELECT ROWNUM no, t.* "
+	            + "        FROM ( "
+	            + "                SELECT seq, title, writer, email, writedate, readed  "
+	            + "                FROM tbl_cstvsboard  ";
+	            
+	            // WHERE 검색조건 START
+	            switch ( searchCondition) {
+	            case 1:  // 제목
+	               sql += " WHERE REGEXP_LIKE( title, ?, 'i') ";
+	               break;
+	            case 2: // 내용
+	               sql += " WHERE REGEXP_LIKE( content, ?, 'i') ";
+	               break;
+	            case 3: // 작성자
+	               sql += " WHERE REGEXP_LIKE( writer, ?, 'i') ";
+	               break;         
+	            case 4: // 제목 + 내용 
+	               sql += " WHERE REGEXP_LIKE( title, ?, 'i') OR  REGEXP_LIKE( content, ?, 'i') ";
+	               break;
+	            } // switch
+	            // END
+	            
+	         sql += "                ORDER BY seq DESC "
+	            + "             ) t "
+	            + "     ) b "
+	            + "WHERE no BETWEEN ? AND ? ";
+	      
+	      
+
+	      try {
+	         int start = (currentPage-1)*numberPerPage +1;
+	           int end = start + numberPerPage-1;
+	           
+	         pstmt = conn.prepareStatement(sql);
+	         
+	         this.pstmt.setString(1, searchWord);
+	         if (searchCondition == 4) { // ? ? ? ? 
+	            this.pstmt.setString(2, searchWord);
+	            this.pstmt.setInt(3, start);
+	            this.pstmt.setInt(4, end);
+	         }else {                     // ?  ?  ? 
+	            this.pstmt.setInt(2, start);
+	            this.pstmt.setInt(3, end);
+	         }
+	         
+	         
+	         rs = pstmt.executeQuery();
+
+	         if (rs.next()) {
+	            list = new ArrayList<>();
+	            do {
+	               
+	               seq = rs.getLong("seq");      
+	               title = rs.getString("title");    
+	               writer = rs.getString("writer");   
+	               email = rs.getString("email");    
+	               writedate = rs.getDate("writedate");
+	               readed = rs.getInt("readed");   
+	               
+	               BoardDTO dto = BoardDTO.builder()
+	                     .seq(seq)
+	                     .title(title)
+	                     .writer(writer)
+	                     .email(email)
+	                     .writeDate(writedate)
+	                     .readed(readed)
+	                     .build();
+	               list.add(dto);
+	            } while (rs.next());
+
+	         } // if 
+
+	      } catch (SQLException e) { 
+	         e.printStackTrace();
+	      } catch( Exception e) {
+	         e.printStackTrace();
+	      } finally {
+	         try {
+	            rs.close();
+	            pstmt.close();
+	         } catch (SQLException e) { 
+	            e.printStackTrace();
+	         }         
+	      }
+
+	      return list;
+	   }
+
+	@Override
+	public int getTotalRecords() throws SQLException {
+
+		int totalRecords = 0;
+		
+		String sql = "SELECT COUNT(*) FROM tbl_cstvsboard";
+		this.pstmt = this.conn.prepareStatement(sql);
+		this.rs = this.pstmt.executeQuery();
+		
+		if(this.rs.next()) totalRecords = rs.getInt(1);
+		
+		this.rs.close();		
+		this.pstmt.close();
+		
+		return totalRecords;
+	}
+	
+
+
+	@Override
+	public int getTotalPages(int numberPerPage) throws SQLException {
+		
+		int totalPages = 0;
+		
+		String sql = "SELECT CEIL(COUNT(*)/?) FROM tbl_cstvsboard";
+		this.pstmt = this.conn.prepareStatement(sql);
+		this.pstmt.setInt(1, numberPerPage);
+		
+		this.rs = this.pstmt.executeQuery();
+		
+		if(this.rs.next()) totalPages = rs.getInt(1);
+		
+		this.rs.close();		
+		this.pstmt.close();
+		
+		return totalPages;
+	}
+	
+	@Override
+	public int getTotalSearchRecords(int searchCondition, String searchWord) throws SQLException {
+int totalRecords = 0;
+		
+		String sql = "SELECT COUNT(*) FROM tbl_cstvsboard ";
+		switch ( searchCondition) {
+		case 1:  // 제목
+			sql += " WHERE REGEXP_LIKE( title, ?, 'i') ";
+			break;
+		case 2: // 내용
+			sql += " WHERE REGEXP_LIKE( content, ?, 'i') ";
+			break;
+		case 3: // 작성자
+			sql += " WHERE REGEXP_LIKE( writer, ?, 'i') ";
+			break;         
+		case 4: // 제목 + 내용 
+			sql += " WHERE REGEXP_LIKE( title, ?, 'i') OR  REGEXP_LIKE( content, ?, 'i') ";
+			break;
+		} // switch
+
+		sql += "ORDER BY seq ASC ";
+		this.pstmt = this.conn.prepareStatement(sql);
+
+		this.pstmt.setString(1, searchWord);
+		if (searchCondition == 4) {
+			this.pstmt.setString(2, searchWord);
+		}
+		this.rs = this.pstmt.executeQuery();
+		
+		if(this.rs.next()) totalRecords = rs.getInt(1);
+		
+
+		this.rs.close();		
+		this.pstmt.close();
+		
+		return totalRecords;
+	}
+	
+	@Override
+	public int getTotalSearchPages(int numberPerPage, int searchCondition, String searchWord) throws SQLException {
+		
+		int totalPages = 0;
+		
+		String sql = "SELECT CEIL(COUNT(*)/?) FROM tbl_cstvsboard ";
+		switch ( searchCondition) {
+		case 1:  // 제목
+			sql += " WHERE REGEXP_LIKE( title, ?, 'i') ";
+			break;
+		case 2: // 내용
+			sql += " WHERE REGEXP_LIKE( content, ?, 'i') ";
+			break;
+		case 3: // 작성자
+			sql += " WHERE REGEXP_LIKE( writer, ?, 'i') ";
+			break;         
+		case 4: // 제목 + 내용 
+			sql += " WHERE REGEXP_LIKE( title, ?, 'i') OR  REGEXP_LIKE( content, ?, 'i') ";
+			break;
+		} // switch
+
+		sql += "ORDER BY seq ASC ";
+		this.pstmt = this.conn.prepareStatement(sql);
+		this.pstmt.setInt(1, numberPerPage);
+		this.pstmt.setString(2, searchWord);
+		if (searchCondition == 4) {
+			this.pstmt.setString(3, searchWord);
+		}
+		
+		this.rs = this.pstmt.executeQuery();
+		
+		if(this.rs.next()) totalPages = rs.getInt(1);
+		
+		this.rs.close();		
+		this.pstmt.close();
+		
+		return totalPages;
 	}
 
 } // class

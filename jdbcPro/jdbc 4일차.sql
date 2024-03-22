@@ -186,4 +186,8 @@ END;
 DESC tbl_cstvsboard;
 SELECT seq, title, writer, email, writeDate, readed 
 					FROM tbl_cstvsboard 
-                    ORDER BY seq DESC
+                    ORDER BY seq DESC;
+                    
+SELECT *
+FROM tbl_cstvsboard
+ORDER BY seq DESC;

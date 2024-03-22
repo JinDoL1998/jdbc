@@ -17,7 +17,9 @@ public class BoardController {
 	private int selectedNumber;
 	private BoardService boardService;
 
-
+	private int currentPage = 1;
+	private int numberPerPage = 10;
+	private int numberOfPageBlock = 10;
 
 	public BoardController() {
 		super();
@@ -111,7 +113,6 @@ public class BoardController {
 
 
 	private void 검색하기() {
-
 		System.out.print(
 				"> 검색 조건 : 제목(1) , 내용(2), 작성자(3), 제목+내용(4) 선택  ? ");
 		int searchCondition = this.scanner.nextInt();
@@ -122,7 +123,7 @@ public class BoardController {
 		System.out.print("> 현재 페이지번호를 입력 ? ");
 		this.currentPage = this.scanner.nextInt();
 		
-		ArrayList<BoardDTO> list = this.boardService.searchService(searchCondition, searchWord);
+		ArrayList<BoardDTO> list = this.boardService.searchService(searchCondition, searchWord, currentPage, numberPerPage);
 
 		// 뷰(View)-출력담당
 		System.out.println("\t\t\t  게시판");
@@ -146,7 +147,8 @@ public class BoardController {
 			}
 		}
 		System.out.println("-----------------------------------------------------------------------------------");
-		System.out.println("\t\t\t [1] 2 3 >");
+		String pageBlock = this.boardService.pageSearchService(currentPage, numberPerPage, numberOfPageBlock, searchCondition, searchWord);
+		System.out.println(pageBlock);
 		System.out.println("-----------------------------------------------------------------------------------");
 
 	}
@@ -241,14 +243,14 @@ public class BoardController {
 
 
 	// 페이징 처리 필요한 필드 선언
-	private int currentPage = 1;
 	
 	private void 목록보기() {
 
 		System.out.print("> 현재 페이지 번호를 입력 ? ");
 		this.currentPage = this.scanner.nextInt();
+		
 
-		ArrayList<BoardDTO> list = this.boardService.selectService();
+		ArrayList<BoardDTO> list = this.boardService.selectService(this.currentPage, this.numberPerPage);
 
 		// 뷰(View)-출력담당
 		System.out.println("\t\t\t  게시판");
@@ -272,7 +274,8 @@ public class BoardController {
 			}
 		}
 		System.out.println("-----------------------------------------------------------------------------------");
-		System.out.println("\t\t\t [1] 2 3 4 5 6 7 8 9 10 >");
+		String pageBlock = this.boardService.pageService(currentPage, numberPerPage, numberOfPageBlock);
+		System.out.println(pageBlock);
 		System.out.println("-----------------------------------------------------------------------------------");
 	}
 

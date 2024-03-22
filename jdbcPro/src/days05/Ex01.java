@@ -67,7 +67,8 @@ public class Ex01 {
 //	    ,content CLOB 
 //	);
 
-/* 									BoardDTO
+/* 							
+ * 									BoardDTO
  * 사용자(user) -> BoardController.java -> BoardService.java
  * 					게시글 쓰기 : 작성		ㄴ 게시글쓰기() BoardDTO
  * 						return int ?
